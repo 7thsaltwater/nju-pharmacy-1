@@ -86,12 +86,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         //设置当前记录的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
 
         //设置党建记录创建人的id的修改人id
-        employee.setCreateUser(BaseContext.getCurrentId());//拦截器和service等所有层都是同一个线程，共享内存空间，从service层可以访问内存空间，获得拦截器里jwt令牌中操作人的id
-        employee.setUpdateUser(BaseContext.getCurrentId());//事实上，每次请求都是一个单独的线程
+//        employee.setCreateUser(BaseContext.getCurrentId());//拦截器和service等所有层都是同一个线程，共享内存空间，从service层可以访问内存空间，获得拦截器里jwt令牌中操作人的id
+//        employee.setUpdateUser(BaseContext.getCurrentId());//事实上，每次请求都是一个单独的线程
 
         /**
          * 插入员工数据
@@ -160,8 +160,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
 
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(BaseContext.getCurrentId());//使用同一线程中拦截器拦截到的当前操作者的id
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(BaseContext.getCurrentId());//使用同一线程中拦截器拦截到的当前操作者的id
 
         employeeMapper.update(employee);
 
