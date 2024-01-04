@@ -59,3 +59,8 @@ sky:
   wechat:
     appid: ${sky.wechat.appid}
     secret: ${sky.wechat.secret}
+
+  shop:
+    address: 南京市栖霞区仙林大道163号
+  baidu:
+    ak: yUboDU1fuvYGkTOtuCx10RhOOTxN8i4s
