@@ -22,6 +22,8 @@ import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import com.sky.vo.OrderVO;
+import com.sky.websocket.WebSocketServer;
+import io.swagger.util.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,9 @@ public class OrderServiceImpl implements OrdersService {
 
     @Value("${sky.baidu.ak}")
     private String ak;
+
+    @Autowired
+    private WebSocketServer webSocketServer;
 
     /**
      * 用户下单
@@ -178,6 +183,16 @@ public class OrderServiceImpl implements OrdersService {
                 .build();
 
         orderMapper.update(orders);
+
+        //通过websocket向客户端浏览器推送消息 typeorderId Content
+        Map map = new HashMap<>();
+        map.put("type", 1); //type:1表示要推送来单提醒，type：2表示要推送用户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + outTradeNo);//把订单号拼进去
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+
     }
 
     /**
@@ -498,6 +513,31 @@ public class OrderServiceImpl implements OrdersService {
         orders.setDeliveryTime(LocalDateTime.now());
 
         orderMapper.update(orders);
+    }
+
+    /**
+     * 用户催单
+     * @param id
+     */
+    @Override
+    public void reminder(Long id) {
+        // 根据id查询订单
+        Orders ordersDB = orderMapper.getById(id);
+
+        // 校验订单是否存在
+        if (ordersDB == null) {
+            throw new OrderBusinessException(MessageConstant.ORDER_STATUS_ERROR);
+        }
+
+        //通过websocket向客户端浏览器推送消息
+        Map map = new HashMap<>();
+        map.put("type", 2); //type:1表示要推送来单提醒，type：2表示要推送用户催单
+        map.put("orderId", ordersDB.getId());
+        map.put("content", "订单号：" + ordersDB.getNumber());//把订单号拼进去
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+
     }
 
     /**
