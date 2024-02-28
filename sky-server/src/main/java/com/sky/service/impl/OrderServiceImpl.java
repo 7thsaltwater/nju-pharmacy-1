@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrdersService {
         //检查用户的收货地址是否超出配送范围
         checkOutOfRange(addressBook.getCityName() + addressBook.getDistrictName() + addressBook.getDetail());
 
-        //查询当前用户购物车数据
+        //查询当前用户购物车数据 拦截器中，用户ID保存到了ThreadLocal中。这样，在接下来的业务代码中，你就可以通过BaseContext.getCurrentId()轻松地获取当前用户的ID信息了
         Long userId = BaseContext.getCurrentId();
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUserId(userId);

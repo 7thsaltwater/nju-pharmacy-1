@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 public class AutoFillAspect {
     /**
      * 切入点
+     * 在这里，切入点定义为拦截 com.sky.mapper 包及其子包中所有方法，并且这些方法上还要有 @AutoFill 注解。
      */
     @Pointcut("execution(* com.sky.mapper.*.*(..)) && @annotation(com.sky.annotation.AutoFill)")//对哪些进行类和类下的方法进行拦截
     public void autoFillPointCut(){}

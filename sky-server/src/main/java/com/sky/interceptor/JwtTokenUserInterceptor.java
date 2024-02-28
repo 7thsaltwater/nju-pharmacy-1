@@ -59,6 +59,9 @@ public class JwtTokenUserInterceptor implements HandlerInterceptor {
             //4、不通过，响应401状态码
             response.setStatus(401);
             return false;
+        }finally {
+            // 清理 ThreadLocal 变量 20240220更新
+            BaseContext.removeCurrentId();
         }
     }
 }
